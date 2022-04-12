@@ -5,11 +5,11 @@ import (
 	"github.com/zaenulhilmi/pastebin/entities"
 )
 
-type ShortlinkServiceMock struct {
+type ShortlinkRepositoryMock struct {
 	mock.Mock
 }
 
-func (m *ShortlinkServiceMock) GetContent(shortlink string) (*entities.Content, error) {
+func (m *ShortlinkRepositoryMock) FindContentByShortlink(shortlink string) (*entities.Content, error) {
 	args := m.Called(shortlink)
 	return args.Get(0).(*entities.Content), args.Error(1)
 }

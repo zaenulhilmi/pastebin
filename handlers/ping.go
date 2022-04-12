@@ -1,7 +1,9 @@
 package handlers
 
-import ("net/http")
+import (
+	"net/http"
+)
 
 func PingHandler(w http.ResponseWriter, r *http.Request) {
-    w.Write([]byte("pong"))
+	w.Write([]byte("pong"))
 }
