@@ -29,7 +29,6 @@ func (h *shortlinkHandler) GetContent(w http.ResponseWriter, r *http.Request) {
 		return
 	}
 	w.WriteHeader(http.StatusOK)
-	// marshal content to json
 	b, _ := content.MarshalJSON()
 	w.Write(b)
 
