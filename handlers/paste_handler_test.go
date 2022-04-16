@@ -8,6 +8,7 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
+    "errors"
 	"time"
 )
 
@@ -50,4 +51,24 @@ func TestReadShortlinkNotFound(t *testing.T) {
 	handler.ServeHTTP(recorder, request)
 
 	assert.Equal(t, http.StatusNotFound, recorder.Code)
+    assert.JSONEq(t, "{\"error\":\"Shortlink not found\"}", recorder.Body.String())
+}
+
+func TestReadShortlinkGeneralError(t *testing.T) {
+	request, _ := http.NewRequest("GET", "http://localhost:8080/paste?shortlink=abc", nil)
+
+	recorder := httptest.NewRecorder()
+
+	shortlinkService := new(mocks.ShortlinkServiceMock)
+	var emptyContent *entities.Content
+	shortlinkService.On("GetContent", "abc").Return(emptyContent, errors.New("error"))
+
+	shortlinkHandler := handlers.NewShortlinkHandler(shortlinkService)
+
+	handler := http.HandlerFunc(shortlinkHandler.GetContent)
+
+	handler.ServeHTTP(recorder, request)
+
+	assert.Equal(t, http.StatusInternalServerError , recorder.Code)
+    assert.JSONEq(t, "{\"error\":\"Something wrong\"}", recorder.Body.String())
 }
