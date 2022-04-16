@@ -1,6 +1,7 @@
 package handlers_test
 
 import (
+	"errors"
 	"github.com/stretchr/testify/assert"
 	"github.com/zaenulhilmi/pastebin/entities"
 	"github.com/zaenulhilmi/pastebin/handlers"
@@ -8,7 +9,6 @@ import (
 	"net/http"
 	"net/http/httptest"
 	"testing"
-    "errors"
 	"time"
 )
 
@@ -51,7 +51,7 @@ func TestReadShortlinkNotFound(t *testing.T) {
 	handler.ServeHTTP(recorder, request)
 
 	assert.Equal(t, http.StatusNotFound, recorder.Code)
-    assert.JSONEq(t, "{\"error\":\"Shortlink not found\"}", recorder.Body.String())
+	assert.JSONEq(t, "{\"error\":\"Shortlink not found\"}", recorder.Body.String())
 }
 
 func TestReadShortlinkGeneralError(t *testing.T) {
@@ -69,6 +69,6 @@ func TestReadShortlinkGeneralError(t *testing.T) {
 
 	handler.ServeHTTP(recorder, request)
 
-	assert.Equal(t, http.StatusInternalServerError , recorder.Code)
-    assert.JSONEq(t, "{\"error\":\"Something wrong\"}", recorder.Body.String())
+	assert.Equal(t, http.StatusInternalServerError, recorder.Code)
+	assert.JSONEq(t, "{\"error\":\"Something wrong\"}", recorder.Body.String())
 }

@@ -1,24 +1,24 @@
 package repositories_test
 
 import (
-	"github.com/stretchr/testify/assert"
+	"fmt"
 	"github.com/DATA-DOG/go-sqlmock"
+	"github.com/stretchr/testify/assert"
 	"github.com/zaenulhilmi/pastebin/entities"
 	"github.com/zaenulhilmi/pastebin/repositories"
 	"testing"
-    "fmt"
 )
 
 func Test_FindContentByShortlink(t *testing.T) {
 	db, mock, err := sqlmock.New()
 
-    repo := repositories.NewShortlinkRepository(db)
+	repo := repositories.NewShortlinkRepository(db)
 	if err != nil {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	defer db.Close()
 
-    content := entities.Content{}
+	content := entities.Content{}
 
 	query := "SELECT text, created_at, expiry_in_minutes FROM contents WHERE shortlink = ?"
 
@@ -29,11 +29,9 @@ func Test_FindContentByShortlink(t *testing.T) {
 		WithArgs("shortlink").
 		WillReturnRows(rows)
 
-    res, err := repo.FindContentByShortlink("shortlink")
-    fmt.Println(res)
+	res, err := repo.FindContentByShortlink("shortlink")
+	fmt.Println(res)
 
-    assert.NotNil(t, res)
-    assert.Nil(t, err)
+	assert.NotNil(t, res)
+	assert.Nil(t, err)
 }
-
-
