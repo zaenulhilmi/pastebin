@@ -65,7 +65,6 @@ func TestCreateContentOk1(t *testing.T) {
 func TestCreateContentOk2(t *testing.T) {
 	repository := new(mocks.ShortlinkRepositoryMock)
 	expectShortlink := "xyz"
-	repository.On("generateShortlink").Return(expectShortlink)
 	repository.On("CreateContent", expectShortlink, "content", 10).Return(nil)
 
 	generator := new(mocks.ShortlinkGeneratorMock)
@@ -74,4 +73,18 @@ func TestCreateContentOk2(t *testing.T) {
 	shortlink, err := shortlinkService.CreateContent("content", 10)
 	assert.Nil(t, err)
 	assert.Equal(t, expectShortlink, shortlink)
+}
+
+func TestCreateContentError(t *testing.T) {
+	repository := new(mocks.ShortlinkRepositoryMock)
+	expectShortlink := "xyz"
+	repository.On("generateShortlink").Return(expectShortlink)
+	repository.On("CreateContent", expectShortlink, "content", 10).Return(errors.New("error"))
+
+	generator := new(mocks.ShortlinkGeneratorMock)
+	generator.On("Generate").Return(expectShortlink)
+	shortlinkService := services.NewShortlinkService(repository, generator)
+	shortlink, err := shortlinkService.CreateContent("content", 10)
+	assert.NotNil(t, err)
+	assert.Equal(t, "", shortlink)
 }

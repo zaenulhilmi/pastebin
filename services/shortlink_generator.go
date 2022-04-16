@@ -13,12 +13,6 @@ func NewShortlinkGenerator() ShortlinkGenerator {
 	return &md5Generator{}
 }
 
-type emptyStringGenerator struct{}
-
-func (s *emptyStringGenerator) Generate() string {
-	return ""
-}
-
 type md5Generator struct{}
 
 func (s *md5Generator) Generate() string {
