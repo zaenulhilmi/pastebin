@@ -3,6 +3,7 @@ package repositories
 import (
 	"database/sql"
 	"github.com/zaenulhilmi/pastebin/entities"
+	"github.com/zaenulhilmi/pastebin/helpers"
 )
 
 type ShortlinkRepository interface {
@@ -10,19 +11,25 @@ type ShortlinkRepository interface {
 	CreateContent(shortlink string, text string, expiryByMinutes int) error
 }
 
-func NewShortlinkRepository(db *sql.DB) ShortlinkRepository {
+func NewShortlinkRepository(db *sql.DB, clock helpers.Clock) ShortlinkRepository {
 	return &shortlinkRepository{
-		db: db,
+		db:    db,
+		clock: clock,
 	}
 }
 
 type shortlinkRepository struct {
-	db *sql.DB
+	db    *sql.DB
+	clock helpers.Clock
 }
 
 func (s *shortlinkRepository) CreateContent(shortlink string, text string, expiryByMinutes int) error {
-	//TODO implement me
-	panic("implement me")
+	createdAt := s.clock.Now()
+	_, err := s.db.Exec("INSERT INTO contents (shortlink, text, created_at, expiry_in_minutes) VALUES (?, ?, ?, ?)", shortlink, text, createdAt, expiryByMinutes)
+	if err != nil {
+		return err
+	}
+	return nil
 }
 
 func (s *shortlinkRepository) FindContentByShortlink(shortlink string) (*entities.Content, error) {

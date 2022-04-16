@@ -5,6 +5,7 @@ import (
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/zaenulhilmi/pastebin/handlers"
+	"github.com/zaenulhilmi/pastebin/helpers"
 	"github.com/zaenulhilmi/pastebin/repositories"
 	"github.com/zaenulhilmi/pastebin/services"
 	"net/http"
@@ -15,7 +16,8 @@ func main() {
 	r.HandleFunc("/ping", handlers.PingHandler)
 
 	db := InitDB()
-	pasteRepository := repositories.NewShortlinkRepository(db)
+	clock := helpers.SystemClock{}
+	pasteRepository := repositories.NewShortlinkRepository(db, clock)
 	shortlinkGenerator := services.NewShortlinkGenerator()
 	pasteService := services.NewShortlinkService(pasteRepository, shortlinkGenerator)
 	pasteHandler := handlers.NewShortlinkHandler(pasteService)

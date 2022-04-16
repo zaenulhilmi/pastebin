@@ -2,6 +2,7 @@ package services
 
 import (
 	"github.com/zaenulhilmi/pastebin/entities"
+	"github.com/zaenulhilmi/pastebin/helpers"
 	"github.com/zaenulhilmi/pastebin/repositories"
 )
 
@@ -11,15 +12,18 @@ type ShortlinkService interface {
 }
 
 func NewShortlinkService(repository repositories.ShortlinkRepository, shortlinkGenerator ShortlinkGenerator) ShortlinkService {
+	clock := helpers.SystemClock{}
 	return &shortlinkService{
 		repository: repository,
 		generator:  shortlinkGenerator,
+		clock:      clock,
 	}
 }
 
 type shortlinkService struct {
 	repository repositories.ShortlinkRepository
 	generator  ShortlinkGenerator
+	clock      helpers.Clock
 }
 
 func (s *shortlinkService) GetContent(shortlink string) (*entities.Content, error) {
