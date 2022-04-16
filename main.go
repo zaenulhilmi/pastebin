@@ -16,7 +16,8 @@ func main() {
 
 	db := InitDB()
 	pasteRepository := repositories.NewShortlinkRepository(db)
-	pasteService := services.NewShortlinkService(pasteRepository)
+	shortlinkGenerator := services.NewShortlinkGenerator()
+	pasteService := services.NewShortlinkService(pasteRepository, shortlinkGenerator)
 	pasteHandler := handlers.NewShortlinkHandler(pasteService)
 
 	r.HandleFunc("/paste", pasteHandler.GetContent)

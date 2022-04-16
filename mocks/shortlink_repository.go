@@ -13,3 +13,8 @@ func (m *ShortlinkRepositoryMock) FindContentByShortlink(shortlink string) (*ent
 	args := m.Called(shortlink)
 	return args.Get(0).(*entities.Content), args.Error(1)
 }
+
+func (m *ShortlinkRepositoryMock) CreateContent(shortlink string, text string, expiryByMinutes int) error {
+	args := m.Called(shortlink, text, expiryByMinutes)
+	return args.Error(0)
+}

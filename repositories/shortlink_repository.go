@@ -7,6 +7,7 @@ import (
 
 type ShortlinkRepository interface {
 	FindContentByShortlink(shortlink string) (*entities.Content, error)
+	CreateContent(shortlink string, text string, expiryByMinutes int) error
 }
 
 func NewShortlinkRepository(db *sql.DB) ShortlinkRepository {
@@ -17,6 +18,11 @@ func NewShortlinkRepository(db *sql.DB) ShortlinkRepository {
 
 type shortlinkRepository struct {
 	db *sql.DB
+}
+
+func (s *shortlinkRepository) CreateContent(shortlink string, text string, expiryByMinutes int) error {
+	//TODO implement me
+	panic("implement me")
 }
 
 func (s *shortlinkRepository) FindContentByShortlink(shortlink string) (*entities.Content, error) {
