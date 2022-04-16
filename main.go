@@ -23,6 +23,7 @@ func main() {
 	pasteHandler := handlers.NewShortlinkHandler(pasteService)
 
 	r.HandleFunc("/paste", pasteHandler.GetContent)
+	r.HandleFunc("/create-paste", pasteHandler.CreateContent)
 
 	http.ListenAndServe(":8080", r)
 
