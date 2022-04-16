@@ -24,13 +24,8 @@ type shortlinkHandler struct {
 
 func (h *shortlinkHandler) GetContent(w http.ResponseWriter, r *http.Request) {
 	shortlink := r.URL.Query().Get("shortlink")
-
 	content, err := h.shortlinkService.GetContent(shortlink)
-
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("{\"error\": \"Something wrong\"}"))
-		fmt.Println(err)
+	if isInternalServerError(w, err) {
 		return
 	}
 
@@ -54,18 +49,22 @@ type CreateRequest struct {
 func (h *shortlinkHandler) CreateContent(w http.ResponseWriter, r *http.Request) {
 	var request CreateRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
-	if err != nil {
-		w.WriteHeader(http.StatusInternalServerError)
-		w.Write([]byte("{\"error\": \"Something wrong\"}"))
-		fmt.Println(err)
+	if isInternalServerError(w, err) {
 		return
 	}
 	shortlink, err := h.shortlinkService.CreateContent(request.Text, request.ExpiryInMinutes)
+	if isInternalServerError(w, err) {
+		return
+	}
+	w.Write([]byte("{\"shortlink\": \"" + shortlink + "\"}"))
+}
+
+func isInternalServerError(w http.ResponseWriter, err error) bool {
 	if err != nil {
 		w.WriteHeader(http.StatusInternalServerError)
 		w.Write([]byte("{\"error\": \"Something wrong\"}"))
 		fmt.Println(err)
-		return
+		return true
 	}
-	w.Write([]byte("{\"shortlink\": \"" + shortlink + "\"}"))
+	return false
 }
