@@ -15,6 +15,6 @@ func (m *ShortlinkServiceMock) GetContent(shortlink string) (*entities.Content, 
 }
 
 func (m *ShortlinkServiceMock) CreateContent(text string, expiryInMinutes int) (string, error) {
-    args := m.Called(text, expiryInMinutes)
-    return args.String(0), args.Error(1)
+	args := m.Called(text, expiryInMinutes)
+	return args.String(0), args.Error(1)
 }

@@ -8,7 +8,7 @@ import (
 	"github.com/zaenulhilmi/pastebin/mocks"
 	"net/http"
 	"net/http/httptest"
-    "strings"
+	"strings"
 	"testing"
 	"time"
 )
@@ -74,45 +74,61 @@ func TestReadShortlinkGeneralError(t *testing.T) {
 	assert.JSONEq(t, "{\"error\":\"Something wrong\"}", recorder.Body.String())
 }
 
-func TestCreateShortlinkContent( t *testing.T) {
-    param := "test"
-    request, _ := http.NewRequest("POST", "http://localhost:8080/paste",
-        strings.NewReader("{\"text\":\""+param+"\",\"expiry_in_minutes\":10}"))
+func TestCreateShortlinkContent(t *testing.T) {
+	param := "test"
+	request, _ := http.NewRequest("POST", "http://localhost:8080/paste",
+		strings.NewReader("{\"text\":\""+param+"\",\"expiry_in_minutes\":10}"))
 
-    recorder := httptest.NewRecorder()
+	recorder := httptest.NewRecorder()
 
-    shortlinkService := new(mocks.ShortlinkServiceMock)
-    shortlinkService.On("CreateContent", param, 10).Return("abc", nil)
+	shortlinkService := new(mocks.ShortlinkServiceMock)
+	shortlinkService.On("CreateContent", param, 10).Return("abc", nil)
 
-    shortlinkHandler := handlers.NewShortlinkHandler(shortlinkService)
+	shortlinkHandler := handlers.NewShortlinkHandler(shortlinkService)
 
-    handler := http.HandlerFunc(shortlinkHandler.CreateContent)
+	handler := http.HandlerFunc(shortlinkHandler.CreateContent)
 
-    handler.ServeHTTP(recorder, request)
+	handler.ServeHTTP(recorder, request)
 
-    assert.Equal(t, http.StatusOK, recorder.Code)
-    assert.JSONEq(t, "{\"shortlink\":\"abc\"}", recorder.Body.String())
+	assert.Equal(t, http.StatusOK, recorder.Code)
+	assert.JSONEq(t, "{\"shortlink\":\"abc\"}", recorder.Body.String())
 }
 
+func TestCreateShortlinkContent2(t *testing.T) {
 
-func TestCreateShortlinkContent2( t *testing.T) {
+	param := "test1"
+	request, _ := http.NewRequest("POST", "http://localhost:8080/paste",
+		strings.NewReader("{\"text\":\""+param+"\",\"expiry_in_minutes\":10}"))
 
-    param := "test1"
-    request, _ := http.NewRequest("POST", "http://localhost:8080/paste",
-        strings.NewReader("{\"text\":\""+param+"\",\"expiry_in_minutes\":10}"))
+	recorder := httptest.NewRecorder()
 
-    recorder := httptest.NewRecorder()
+	shortlinkService := new(mocks.ShortlinkServiceMock)
+	shortlinkService.On("CreateContent", param, 10).Return("xyz", nil)
 
-    shortlinkService := new(mocks.ShortlinkServiceMock)
-    shortlinkService.On("CreateContent", param, 10).Return("xyz", nil)
+	shortlinkHandler := handlers.NewShortlinkHandler(shortlinkService)
 
-    shortlinkHandler := handlers.NewShortlinkHandler(shortlinkService)
+	handler := http.HandlerFunc(shortlinkHandler.CreateContent)
 
-    handler := http.HandlerFunc(shortlinkHandler.CreateContent)
+	handler.ServeHTTP(recorder, request)
 
-    handler.ServeHTTP(recorder, request)
+	assert.Equal(t, http.StatusOK, recorder.Code)
+	assert.JSONEq(t, "{\"shortlink\":\"xyz\"}", recorder.Body.String())
+}
 
+func TestCreateShortlinkUnknownError(t *testing.T) {
+	request, _ := http.NewRequest("POST", "http://localhost:8080/paste",
+		strings.NewReader("{\"text\":\"test\",\"expiry_in_minutes\":10}"))
+	recorder := httptest.NewRecorder()
 
-    assert.Equal(t, http.StatusOK, recorder.Code)
-    assert.JSONEq(t, "{\"shortlink\":\"xyz\"}", recorder.Body.String())
+	shortlinkService := new(mocks.ShortlinkServiceMock)
+	shortlinkService.On("CreateContent", "test", 10).Return("", errors.New("error"))
+
+	shortlinkHandler := handlers.NewShortlinkHandler(shortlinkService)
+
+	handler := http.HandlerFunc(shortlinkHandler.CreateContent)
+
+	handler.ServeHTTP(recorder, request)
+
+	assert.Equal(t, http.StatusInternalServerError, recorder.Code)
+	assert.JSONEq(t, "{\"error\":\"Something wrong\"}", recorder.Body.String())
 }

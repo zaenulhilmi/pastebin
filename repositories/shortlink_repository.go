@@ -24,9 +24,9 @@ func (s *shortlinkRepository) FindContentByShortlink(shortlink string) (*entitie
 	err := s.db.QueryRow("SELECT text, created_at, expiry_in_minutes FROM contents WHERE shortlink = ?", shortlink).
 		Scan(&content.Text, &content.CreatedAt, &content.ExpiryInMinutes)
 
-    if err == sql.ErrNoRows {
-        return nil, nil
-    }
+	if err == sql.ErrNoRows {
+		return nil, nil
+	}
 
 	if err != nil {
 		return nil, err

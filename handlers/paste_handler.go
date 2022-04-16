@@ -1,10 +1,10 @@
 package handlers
 
 import (
+	"encoding/json"
 	"fmt"
 	"github.com/zaenulhilmi/pastebin/services"
 	"net/http"
-    "encoding/json"
 )
 
 func NewShortlinkHandler(service services.ShortlinkService) ShortlinkHandler {
@@ -46,21 +46,26 @@ func (h *shortlinkHandler) GetContent(w http.ResponseWriter, r *http.Request) {
 
 }
 
-
 type CreateRequest struct {
-    Text string `json:"text"`
-    ExpiryInMinutes int `json:"expiry_in_minutes"`
+	Text            string `json:"text"`
+	ExpiryInMinutes int    `json:"expiry_in_minutes"`
 }
 
 func (h *shortlinkHandler) CreateContent(w http.ResponseWriter, r *http.Request) {
-    var request CreateRequest
-    err := json.NewDecoder(r.Body).Decode(&request)
-    if err != nil {
-        w.WriteHeader(http.StatusInternalServerError)
-        w.Write([]byte("{\"error\": \"Something wrong\"}"))
-        fmt.Println(err)
-        return
-    }
-    shortlink, err := h.shortlinkService.CreateContent(request.Text, request.ExpiryInMinutes)
-    w.Write([]byte("{\"shortlink\": \""+shortlink+"\"}"))
+	var request CreateRequest
+	err := json.NewDecoder(r.Body).Decode(&request)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("{\"error\": \"Something wrong\"}"))
+		fmt.Println(err)
+		return
+	}
+	shortlink, err := h.shortlinkService.CreateContent(request.Text, request.ExpiryInMinutes)
+	if err != nil {
+		w.WriteHeader(http.StatusInternalServerError)
+		w.Write([]byte("{\"error\": \"Something wrong\"}"))
+		fmt.Println(err)
+		return
+	}
+	w.Write([]byte("{\"shortlink\": \"" + shortlink + "\"}"))
 }

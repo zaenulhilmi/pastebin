@@ -7,7 +7,7 @@ import (
 
 type ShortlinkService interface {
 	GetContent(shortlink string) (*entities.Content, error)
-    CreateContent(text string, expiryInMinutes int) (string, error)
+	CreateContent(text string, expiryInMinutes int) (string, error)
 }
 
 func NewShortlinkService(repository repositories.ShortlinkRepository) ShortlinkService {
@@ -29,5 +29,5 @@ func (s *shortlinkService) GetContent(shortlink string) (*entities.Content, erro
 }
 
 func (s *shortlinkService) CreateContent(text string, expiryInMinutes int) (string, error) {
-    return "", nil
+	return "", nil
 }
