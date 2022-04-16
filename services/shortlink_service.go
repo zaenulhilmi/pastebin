@@ -35,8 +35,11 @@ func (s *shortlinkService) GetContent(shortlink string) (*entities.Content, erro
 }
 
 func (s *shortlinkService) CreateContent(text string, expiryInMinutes int) (string, error) {
-	shortlink := s.generator.Generate()
-	err := s.repository.CreateContent(shortlink, text, expiryInMinutes)
+	shortlink, err := s.generator.Generate()
+	if err != nil {
+		return "", err
+	}
+	err = s.repository.CreateContent(shortlink, text, expiryInMinutes)
 	if err != nil {
 		return "", err
 	}

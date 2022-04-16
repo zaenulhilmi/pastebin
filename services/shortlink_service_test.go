@@ -49,30 +49,37 @@ func TestGetContentError(t *testing.T) {
 	assert.Equal(t, "error", err.Error())
 }
 
-func TestCreateContentOk1(t *testing.T) {
-	repository := new(mocks.ShortlinkRepositoryMock)
-	expectShortlink := "abc"
-	repository.On("CreateContent", expectShortlink, "content", 10).Return(nil)
+func TestCreateContentOk(t *testing.T) {
+	tests := []struct {
+		name            string
+		expectShortlink string
+	}{
+		{
+			name:            "abc",
+			expectShortlink: "abc",
+		},
+		{
+			name:            "xyz",
+			expectShortlink: "xyz",
+		},
+	}
 
-	generator := new(mocks.ShortlinkGeneratorMock)
-	generator.On("Generate").Return(expectShortlink)
-	shortlinkService := services.NewShortlinkService(repository, generator)
-	shortlink, err := shortlinkService.CreateContent("content", 10)
-	assert.Nil(t, err)
-	assert.Equal(t, expectShortlink, shortlink)
-}
+	for _, test := range tests {
+		t.Run(test.name, func(t *testing.T) {
+			repository := new(mocks.ShortlinkRepositoryMock)
+			repository.On("CreateContent", test.expectShortlink, "content", 10).Return(nil)
 
-func TestCreateContentOk2(t *testing.T) {
-	repository := new(mocks.ShortlinkRepositoryMock)
-	expectShortlink := "xyz"
-	repository.On("CreateContent", expectShortlink, "content", 10).Return(nil)
+			generator := new(mocks.ShortlinkGeneratorMock)
+			generator.On("Generate").Return(test.expectShortlink, nil)
 
-	generator := new(mocks.ShortlinkGeneratorMock)
-	generator.On("Generate").Return(expectShortlink)
-	shortlinkService := services.NewShortlinkService(repository, generator)
-	shortlink, err := shortlinkService.CreateContent("content", 10)
-	assert.Nil(t, err)
-	assert.Equal(t, expectShortlink, shortlink)
+			shortlinkService := services.NewShortlinkService(repository, generator)
+			shortlink, err := shortlinkService.CreateContent("content", 10)
+
+			assert.Nil(t, err)
+			assert.Equal(t, test.expectShortlink, shortlink)
+
+		})
+	}
 }
 
 func TestCreateContentError(t *testing.T) {
@@ -82,7 +89,7 @@ func TestCreateContentError(t *testing.T) {
 	repository.On("CreateContent", expectShortlink, "content", 10).Return(errors.New("error"))
 
 	generator := new(mocks.ShortlinkGeneratorMock)
-	generator.On("Generate").Return(expectShortlink)
+	generator.On("Generate").Return(expectShortlink, nil)
 	shortlinkService := services.NewShortlinkService(repository, generator)
 	shortlink, err := shortlinkService.CreateContent("content", 10)
 	assert.NotNil(t, err)

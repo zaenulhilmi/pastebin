@@ -1,26 +1,23 @@
 package services
 
 import (
-	"crypto/rand"
-	"fmt"
+	"github.com/zaenulhilmi/pastebin/helpers"
 )
 
 type ShortlinkGenerator interface {
-	Generate() string
+	Generate() (string, error)
 }
 
-func NewShortlinkGenerator() ShortlinkGenerator {
-	return &md5Generator{}
+func NewShortlinkGenerator(token helpers.Token) ShortlinkGenerator {
+	return &md5Generator{
+		token: token,
+	}
 }
 
-type md5Generator struct{}
-
-func (s *md5Generator) Generate() string {
-	return randToken()
+type md5Generator struct {
+	token helpers.Token
 }
 
-func randToken() string {
-	b := make([]byte, 8)
-	rand.Read(b)
-	return fmt.Sprintf("%x", b)
+func (s *md5Generator) Generate() (string, error) {
+	return s.token.Random(8), nil
 }
