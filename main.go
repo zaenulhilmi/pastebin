@@ -18,7 +18,11 @@ func main() {
 	db := InitDB()
 	clock := helpers.SystemClock{}
 	pasteRepository := repositories.NewShortlinkRepository(db, clock)
-	shortlinkGenerator := services.NewShortlinkGenerator(pasteRepository, &helpers.DefaultToken{})
+
+	cache := helpers.NewCache()
+	cacheRepositoryAdapter := repositories.NewCacheAdapter(pasteRepository, cache)
+	shortlinkGenerator := services.NewShortlinkGenerator(cacheRepositoryAdapter, &helpers.DefaultToken{})
+
 	pasteService := services.NewShortlinkService(pasteRepository, shortlinkGenerator)
 	pasteHandler := handlers.NewShortlinkHandler(pasteService)
 
