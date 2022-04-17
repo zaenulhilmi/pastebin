@@ -2,12 +2,13 @@ package services_test
 
 import (
 	"errors"
+	"testing"
+	"time"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/zaenulhilmi/pastebin/entities"
 	"github.com/zaenulhilmi/pastebin/mocks"
 	"github.com/zaenulhilmi/pastebin/services"
-	"testing"
-	"time"
 )
 
 func TestGetContentNotFound(t *testing.T) {
@@ -35,6 +36,7 @@ func TestGetContentOk(t *testing.T) {
 	shortlinkService := services.NewShortlinkService(repository, generator)
 	content, _ := shortlinkService.GetContent("abc")
 	assert.Equal(t, expectedContent, content)
+
 }
 
 func TestGetContentError(t *testing.T) {

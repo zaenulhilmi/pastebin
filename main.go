@@ -2,13 +2,14 @@ package main
 
 import (
 	"database/sql"
+	"net/http"
+
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/zaenulhilmi/pastebin/handlers"
 	"github.com/zaenulhilmi/pastebin/helpers"
 	"github.com/zaenulhilmi/pastebin/repositories"
 	"github.com/zaenulhilmi/pastebin/services"
-	"net/http"
 )
 
 func main() {

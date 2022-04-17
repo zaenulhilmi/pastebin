@@ -1,11 +1,12 @@
 package handlers_test
 
 import (
-	"github.com/stretchr/testify/assert"
-	"github.com/zaenulhilmi/pastebin/handlers"
 	"net/http"
 	"net/http/httptest"
 	"testing"
+
+	"github.com/stretchr/testify/assert"
+	"github.com/zaenulhilmi/pastebin/handlers"
 )
 
 func TestPingHandler(t *testing.T) {

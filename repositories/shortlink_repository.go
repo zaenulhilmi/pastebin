@@ -2,6 +2,7 @@ package repositories
 
 import (
 	"database/sql"
+
 	"github.com/zaenulhilmi/pastebin/entities"
 	"github.com/zaenulhilmi/pastebin/helpers"
 )
@@ -17,5 +18,3 @@ func NewShortlinkRepository(db *sql.DB, clock helpers.Clock) ShortlinkRepository
 		clock: clock,
 	}
 }
-
-

@@ -1,13 +1,14 @@
 package repositories_test
 
 import (
+	"testing"
+
 	"github.com/DATA-DOG/go-sqlmock"
 	"github.com/stretchr/testify/assert"
 	"github.com/zaenulhilmi/pastebin/entities"
 	"github.com/zaenulhilmi/pastebin/helpers"
 	"github.com/zaenulhilmi/pastebin/mocks"
 	"github.com/zaenulhilmi/pastebin/repositories"
-	"testing"
 )
 
 func TestFindContentByShortlink(t *testing.T) {

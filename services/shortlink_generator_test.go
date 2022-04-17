@@ -1,11 +1,12 @@
 package services_test
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/zaenulhilmi/pastebin/entities"
 	"github.com/zaenulhilmi/pastebin/mocks"
 	"github.com/zaenulhilmi/pastebin/services"
-	"testing"
 )
 
 func TestMd5Generator_GenerateOk(t *testing.T) {

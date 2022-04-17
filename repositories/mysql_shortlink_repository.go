@@ -1,12 +1,11 @@
 package repositories
 
 import (
-    "database/sql"
+	"database/sql"
+
 	"github.com/zaenulhilmi/pastebin/entities"
 	"github.com/zaenulhilmi/pastebin/helpers"
 )
-
-
 
 type shortlinkRepository struct {
 	db    *sql.DB

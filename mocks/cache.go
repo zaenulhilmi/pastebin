@@ -8,6 +8,7 @@ type CacheMock struct {
 
 func (c *CacheMock) Get(key string) (interface{}, bool) {
 	args := c.Called(key)
+
 	return args.Get(0), args.Bool(1)
 }
 

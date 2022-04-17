@@ -1,12 +1,13 @@
 package repositories_test
 
 import (
+	"testing"
+
 	"github.com/stretchr/testify/assert"
 	"github.com/stretchr/testify/mock"
 	"github.com/zaenulhilmi/pastebin/entities"
 	"github.com/zaenulhilmi/pastebin/mocks"
 	"github.com/zaenulhilmi/pastebin/repositories"
-	"testing"
 )
 
 func TestFindContentByShortlinkAdapterByCache(t *testing.T) {

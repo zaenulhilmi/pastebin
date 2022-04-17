@@ -2,8 +2,9 @@ package handlers
 
 import (
 	"encoding/json"
-	"github.com/zaenulhilmi/pastebin/services"
 	"net/http"
+
+	"github.com/zaenulhilmi/pastebin/services"
 )
 
 func NewShortlinkHandler(service services.ShortlinkService) ShortlinkHandler {
