@@ -23,7 +23,7 @@ func main() {
 	cacheRepositoryAdapter := repositories.NewCacheAdapter(pasteRepository, cache)
 	shortlinkGenerator := services.NewShortlinkGenerator(cacheRepositoryAdapter, &helpers.DefaultToken{})
 
-	pasteService := services.NewShortlinkService(pasteRepository, shortlinkGenerator)
+	pasteService := services.NewShortlinkService(cacheRepositoryAdapter, shortlinkGenerator)
 	pasteHandler := handlers.NewShortlinkHandler(pasteService)
 
 	r.HandleFunc("/paste", pasteHandler.GetContent)
