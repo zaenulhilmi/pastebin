@@ -48,3 +48,6 @@ type ShortlinkRepository interface {
 	DeleteExpiredContent() error
 }
 ```
+
+## Dependency Graph
+![Dependency Graph](./dependency_graph.png "Dependency Graph")
