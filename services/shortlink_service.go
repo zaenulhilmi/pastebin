@@ -2,28 +2,25 @@ package services
 
 import (
 	"github.com/zaenulhilmi/pastebin/entities"
-	"github.com/zaenulhilmi/pastebin/helpers"
 	"github.com/zaenulhilmi/pastebin/repositories"
 )
 
 type ShortlinkService interface {
 	GetContent(shortlink string) (*entities.Content, error)
 	CreateContent(text string, expiryInMinutes int) (string, error)
+	DeleteExpiredContent() error
 }
 
 func NewShortlinkService(repository repositories.ShortlinkRepository, shortlinkGenerator ShortlinkGenerator) ShortlinkService {
-	clock := helpers.SystemClock{}
 	return &shortlinkService{
 		repository: repository,
 		generator:  shortlinkGenerator,
-		clock:      clock,
 	}
 }
 
 type shortlinkService struct {
 	repository repositories.ShortlinkRepository
 	generator  ShortlinkGenerator
-	clock      helpers.Clock
 }
 
 func (s *shortlinkService) GetContent(shortlink string) (*entities.Content, error) {
@@ -44,4 +41,12 @@ func (s *shortlinkService) CreateContent(text string, expiryInMinutes int) (stri
 		return "", err
 	}
 	return shortlink, nil
+}
+
+func (s *shortlinkService) DeleteExpiredContent() error {
+
+	err := s.repository.DeleteExpiredContent()
+
+	// not implemented
+	return err
 }

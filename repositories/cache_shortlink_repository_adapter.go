@@ -37,3 +37,11 @@ func (c *cacheShortlinkRepositoryAdapter) CreateContent(shortlink string, text s
 	c.cache.Set(shortlink, content)
 	return err
 }
+
+func (c *cacheShortlinkRepositoryAdapter) DeleteExpiredContent() error {
+	err := c.shortlinkRepository.DeleteExpiredContent()
+	if err != nil {
+		return err
+	}
+	return err
+}

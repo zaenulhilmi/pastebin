@@ -18,3 +18,8 @@ func (m *ShortlinkRepositoryMock) CreateContent(shortlink string, text string, e
 	args := m.Called(shortlink, text, expiryByMinutes)
 	return args.Error(0)
 }
+
+func (m *ShortlinkRepositoryMock) DeleteExpiredContent() error {
+	args := m.Called()
+	return args.Error(0)
+}

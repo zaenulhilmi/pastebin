@@ -10,6 +10,7 @@ import (
 type ShortlinkRepository interface {
 	FindContentByShortlink(shortlink string) (*entities.Content, error)
 	CreateContent(shortlink string, text string, expiryByMinutes int) error
+	DeleteExpiredContent() error
 }
 
 func NewShortlinkRepository(db *sql.DB, clock helpers.Clock) ShortlinkRepository {

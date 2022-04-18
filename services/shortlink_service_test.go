@@ -97,3 +97,23 @@ func TestCreateContentError(t *testing.T) {
 	assert.NotNil(t, err)
 	assert.Equal(t, "", shortlink)
 }
+
+func TestDeleteExpiredContent(t *testing.T) {
+	repository := new(mocks.ShortlinkRepositoryMock)
+	repository.On("DeleteExpiredContent").Return(nil)
+
+	shortlinkService := services.NewShortlinkService(repository, nil)
+	err := shortlinkService.DeleteExpiredContent()
+	assert.Nil(t, err)
+	repository.AssertCalled(t, "DeleteExpiredContent")
+}
+
+func TestDeleteExpiredContentError(t *testing.T) {
+	repository := new(mocks.ShortlinkRepositoryMock)
+	repository.On("DeleteExpiredContent").Return(errors.New("error"))
+
+	shortlinkService := services.NewShortlinkService(repository, nil)
+	err := shortlinkService.DeleteExpiredContent()
+	assert.NotNil(t, err)
+	repository.AssertCalled(t, "DeleteExpiredContent")
+}

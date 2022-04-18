@@ -35,3 +35,9 @@ func (s *shortlinkRepository) FindContentByShortlink(shortlink string) (*entitie
 	}
 	return &content, nil
 }
+
+func (s *shortlinkRepository) DeleteExpiredContent() error {
+	return nil
+	//_, err := s.db.Exec("DELETE FROM contents WHERE expiry_in_minutes > 0 AND created_at < ?", s.clock.Now().Add(-1*s.clock.Minute()))
+	//return err
+}

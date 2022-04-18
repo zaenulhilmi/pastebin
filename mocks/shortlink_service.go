@@ -18,3 +18,8 @@ func (m *ShortlinkServiceMock) CreateContent(text string, expiryInMinutes int) (
 	args := m.Called(text, expiryInMinutes)
 	return args.String(0), args.Error(1)
 }
+
+func (m *ShortlinkServiceMock) DeleteExpiredContent() error {
+	args := m.Called()
+	return args.Error(0)
+}
