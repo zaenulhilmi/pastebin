@@ -2,7 +2,7 @@
 
 
 ##  Endpoints
-There are two main endpoint for this pastebin, first is creating the shortlink
+There are two main endpoints for this pastebin, first is creating the shortlink
 and second is get the content from shortlink
 
 Create a shortlink
@@ -15,7 +15,7 @@ curl --location --request POST 'localhost:8080/create-paste' \
 }'
 ```
 
-Get a content of shortlink
+Get a content of a shortlink
 ```
 curl 'http://localhost:8080/paste?shortlink=abc'
 ```
@@ -23,7 +23,7 @@ curl 'http://localhost:8080/paste?shortlink=abc'
 ## Deleting Expired Contents
 
 ShortlinkService has a method to delete all expired content. The service method
-later can be used to update the expired content.
+later can be used to delete all expired contents.
 ```
 type ShortlinkService interface {
 	GetContent(shortlink string) (*entities.Content, error)
