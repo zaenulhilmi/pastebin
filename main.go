@@ -31,7 +31,6 @@ func main() {
 	r.HandleFunc("/create-paste", pasteHandler.CreateContent)
 
 	http.ListenAndServe(":8080", r)
-
 }
 
 func InitDB() *sql.DB {
