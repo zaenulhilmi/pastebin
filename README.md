@@ -32,3 +32,18 @@ type ShortlinkService interface {
 }
 ```
 
+
+## Read From and Writing To Cache
+
+A paste can be read so many times and in parallel so it is needed to be read from
+memory first instead of reading from database everytime. It will improve 
+performance and reduce the load to the database. Hence, an adapter from repository
+was created following the repository interface.
+
+```
+type ShortlinkRepository interface {
+	FindContentByShortlink(shortlink string) (*entities.Content, error)
+	CreateContent(shortlink string, text string, expiryByMinutes int) error
+	DeleteExpiredContent() error
+}
+```
