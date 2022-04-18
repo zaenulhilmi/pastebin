@@ -24,7 +24,7 @@ curl 'http://localhost:8080/paste?shortlink=abc'
 
 ShortlinkService has a method to delete all expired content. The service method
 later can be used to delete all expired contents. The implementation using a 
-scheduler every 1 minutes will execute ```DeleteExpiredContent()```
+scheduler every 1 minute will execute ```DeleteExpiredContent()```
 ```
 type ShortlinkService interface {
 	GetContent(shortlink string) (*entities.Content, error)
