@@ -3,7 +3,9 @@ package main
 import (
 	"database/sql"
 	"net/http"
+	"time"
 
+	"github.com/go-co-op/gocron"
 	_ "github.com/go-sql-driver/mysql"
 	"github.com/gorilla/mux"
 	"github.com/zaenulhilmi/pastebin/handlers"
@@ -29,6 +31,12 @@ func main() {
 
 	r.HandleFunc("/paste", pasteHandler.GetContent)
 	r.HandleFunc("/create-paste", pasteHandler.CreateContent)
+
+	s := gocron.NewScheduler(time.UTC)
+	s.Every(1).Minutes().Do(func() {
+		pasteService.DeleteExpiredContent()
+	})
+    s.StartAsync()
 
 	http.ListenAndServe(":8080", r)
 }

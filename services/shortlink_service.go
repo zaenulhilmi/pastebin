@@ -44,9 +44,6 @@ func (s *shortlinkService) CreateContent(text string, expiryInMinutes int) (stri
 }
 
 func (s *shortlinkService) DeleteExpiredContent() error {
-
 	err := s.repository.DeleteExpiredContent()
-
-	// not implemented
 	return err
 }
