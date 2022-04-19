@@ -17,7 +17,7 @@ import (
 func TestReadShortlinkOk(t *testing.T) {
 	request, _ := http.NewRequest("GET", "http://localhost:8080/paste?shortlink=abc", nil)
 	recorder := httptest.NewRecorder()
-	shortlinkService := new(mocks.ShortlinkServiceMock)
+	shortlinkService := new(mocks.PasteServiceMock)
 
 	createdAt := time.Now()
 	shortlinkService.On("GetContent", "abc").Return(&entities.Content{
@@ -37,7 +37,7 @@ func TestReadShortlinkOk(t *testing.T) {
 func TestReadShortlinkNotFound(t *testing.T) {
 	request, _ := http.NewRequest("GET", "http://localhost:8080/paste?shortlink=abc", nil)
 	recorder := httptest.NewRecorder()
-	shortlinkService := new(mocks.ShortlinkServiceMock)
+	shortlinkService := new(mocks.PasteServiceMock)
 
 	var emptyContent *entities.Content
 	shortlinkService.On("GetContent", "abc").Return(emptyContent, nil)
@@ -52,7 +52,7 @@ func TestReadShortlinkNotFound(t *testing.T) {
 func TestReadShortlinkGeneralError(t *testing.T) {
 	request, _ := http.NewRequest("GET", "http://localhost:8080/paste?shortlink=abc", nil)
 	recorder := httptest.NewRecorder()
-	shortlinkService := new(mocks.ShortlinkServiceMock)
+	shortlinkService := new(mocks.PasteServiceMock)
 
 	var emptyContent *entities.Content
 	shortlinkService.On("GetContent", "abc").Return(emptyContent, errors.New("error"))
@@ -71,7 +71,7 @@ func TestCreateShortlinkContent(t *testing.T) {
 
 	recorder := httptest.NewRecorder()
 
-	shortlinkService := new(mocks.ShortlinkServiceMock)
+	shortlinkService := new(mocks.PasteServiceMock)
 	shortlinkService.On("CreateContent", param, 10).Return("abc", nil)
 
 	shortlinkHandler := handlers.NewShortlinkHandler(shortlinkService)
@@ -89,7 +89,7 @@ func TestCreateShortlinkContent2(t *testing.T) {
 		strings.NewReader("{\"text\":\""+param+"\",\"expiry_in_minutes\":10}"))
 	recorder := httptest.NewRecorder()
 
-	shortlinkService := new(mocks.ShortlinkServiceMock)
+	shortlinkService := new(mocks.PasteServiceMock)
 	shortlinkService.On("CreateContent", param, 10).Return("xyz", nil)
 
 	shortlinkHandler := handlers.NewShortlinkHandler(shortlinkService)
@@ -105,7 +105,7 @@ func TestCreateShortlinkUnknownError(t *testing.T) {
 		strings.NewReader("{\"text\":\"test\",\"expiry_in_minutes\":10}"))
 	recorder := httptest.NewRecorder()
 
-	shortlinkService := new(mocks.ShortlinkServiceMock)
+	shortlinkService := new(mocks.PasteServiceMock)
 	shortlinkService.On("CreateContent", "test", 10).Return("", errors.New("error"))
 
 	shortlinkHandler := handlers.NewShortlinkHandler(shortlinkService)
