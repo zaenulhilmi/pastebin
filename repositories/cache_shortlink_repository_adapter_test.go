@@ -11,7 +11,7 @@ import (
 )
 
 func TestFindContentByShortlinkAdapterByCache(t *testing.T) {
-	shortlinkRepository := new(mocks.ShortlinkRepositoryMock)
+	shortlinkRepository := new(mocks.PasteRepositoryMock)
 	shortlinkRepository.On("FindContentByShortlink", "shortlink").Return(&entities.Content{Text: "from repo"}, nil)
 
 	cache := new(mocks.CacheMock)
@@ -24,7 +24,7 @@ func TestFindContentByShortlinkAdapterByCache(t *testing.T) {
 }
 
 func TestFindContentByShortlinkAdapterByRepositories(t *testing.T) {
-	shortlinkRepository := new(mocks.ShortlinkRepositoryMock)
+	shortlinkRepository := new(mocks.PasteRepositoryMock)
 	shortlinkRepository.On("FindContentByShortlink", "shortlink").Return(&entities.Content{Text: "from repo"}, nil)
 
 	cache := new(mocks.CacheMock)
@@ -39,7 +39,7 @@ func TestFindContentByShortlinkAdapterByRepositories(t *testing.T) {
 
 func TestCreateContentSaveToCache(t *testing.T) {
 	clock := new(mocks.ClockMock)
-	shortlinkRepository := new(mocks.ShortlinkRepositoryMock)
+	shortlinkRepository := new(mocks.PasteRepositoryMock)
 	shortlinkRepository.On("CreateContent", "shortlink", "from repo", 10).Return(nil)
 
 	createdContent := &entities.Content{Text: "from repo", CreatedAt: clock.Now(), ExpiryInMinutes: 10}

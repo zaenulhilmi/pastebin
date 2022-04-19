@@ -7,22 +7,22 @@ import (
 	"github.com/zaenulhilmi/pastebin/services"
 )
 
-func NewShortlinkHandler(service services.ShortlinkService) ShortlinkHandler {
-	return &shortlinkHandler{
+func NewShortlinkHandler(service services.ShortlinkService) PasteHandler {
+	return &pasteHandler{
 		shortlinkService: service,
 	}
 }
 
-type ShortlinkHandler interface {
+type PasteHandler interface {
 	GetContent(w http.ResponseWriter, r *http.Request)
 	CreateContent(w http.ResponseWriter, r *http.Request)
 }
 
-type shortlinkHandler struct {
+type pasteHandler struct {
 	shortlinkService services.ShortlinkService
 }
 
-func (h *shortlinkHandler) GetContent(w http.ResponseWriter, r *http.Request) {
+func (h *pasteHandler) GetContent(w http.ResponseWriter, r *http.Request) {
 	shortlink := r.URL.Query().Get("shortlink")
 	content, err := h.shortlinkService.GetContent(shortlink)
 	if err != nil {
@@ -47,7 +47,7 @@ type CreateRequest struct {
 	ExpiryInMinutes int    `json:"expiry_in_minutes"`
 }
 
-func (h *shortlinkHandler) CreateContent(w http.ResponseWriter, r *http.Request) {
+func (h *pasteHandler) CreateContent(w http.ResponseWriter, r *http.Request) {
 	var request CreateRequest
 	err := json.NewDecoder(r.Body).Decode(&request)
 	if err != nil {

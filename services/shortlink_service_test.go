@@ -13,7 +13,7 @@ import (
 
 func TestGetContentNotFound(t *testing.T) {
 	var emptyContent *entities.Content
-	repository := new(mocks.ShortlinkRepositoryMock)
+	repository := new(mocks.PasteRepositoryMock)
 	repository.On("FindContentByShortlink", "abc").Return(emptyContent, nil)
 
 	generator := new(mocks.ShortlinkGeneratorMock)
@@ -29,7 +29,7 @@ func TestGetContentOk(t *testing.T) {
 		CreatedAt: time.Now(),
 	}
 
-	repository := new(mocks.ShortlinkRepositoryMock)
+	repository := new(mocks.PasteRepositoryMock)
 	repository.On("FindContentByShortlink", "abc").Return(expectedContent, nil)
 
 	generator := new(mocks.ShortlinkGeneratorMock)
@@ -41,7 +41,7 @@ func TestGetContentOk(t *testing.T) {
 
 func TestGetContentError(t *testing.T) {
 	var emptyContent *entities.Content
-	repository := new(mocks.ShortlinkRepositoryMock)
+	repository := new(mocks.PasteRepositoryMock)
 	repository.On("FindContentByShortlink", "abc").Return(emptyContent, errors.New("error"))
 
 	generator := new(mocks.ShortlinkGeneratorMock)
@@ -68,7 +68,7 @@ func TestCreateContentOk(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			repository := new(mocks.ShortlinkRepositoryMock)
+			repository := new(mocks.PasteRepositoryMock)
 			repository.On("CreateContent", test.expectShortlink, "content", 10).Return(nil)
 
 			generator := new(mocks.ShortlinkGeneratorMock)
@@ -85,7 +85,7 @@ func TestCreateContentOk(t *testing.T) {
 }
 
 func TestCreateContentError(t *testing.T) {
-	repository := new(mocks.ShortlinkRepositoryMock)
+	repository := new(mocks.PasteRepositoryMock)
 	expectShortlink := "xyz"
 	repository.On("generateShortlink").Return(expectShortlink)
 	repository.On("CreateContent", expectShortlink, "content", 10).Return(errors.New("error"))
@@ -99,7 +99,7 @@ func TestCreateContentError(t *testing.T) {
 }
 
 func TestDeleteExpiredContent(t *testing.T) {
-	repository := new(mocks.ShortlinkRepositoryMock)
+	repository := new(mocks.PasteRepositoryMock)
 	repository.On("DeleteExpiredContent").Return(nil)
 
 	shortlinkService := services.NewShortlinkService(repository, nil)
@@ -109,7 +109,7 @@ func TestDeleteExpiredContent(t *testing.T) {
 }
 
 func TestDeleteExpiredContentError(t *testing.T) {
-	repository := new(mocks.ShortlinkRepositoryMock)
+	repository := new(mocks.PasteRepositoryMock)
 	repository.On("DeleteExpiredContent").Return(errors.New("error"))
 
 	shortlinkService := services.NewShortlinkService(repository, nil)

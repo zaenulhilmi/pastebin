@@ -10,7 +10,7 @@ import (
 )
 
 func TestMd5Generator_GenerateOk(t *testing.T) {
-	repo := new(mocks.ShortlinkRepositoryMock)
+	repo := new(mocks.PasteRepositoryMock)
 	var emptyContent *entities.Content
 	repo.On("FindContentByShortlink", "abc").Return(emptyContent, nil)
 	generator := services.NewShortlinkGenerator(repo, &MockToken{})
@@ -20,7 +20,7 @@ func TestMd5Generator_GenerateOk(t *testing.T) {
 }
 
 func TestMd5Generator_GenerateFail(t *testing.T) {
-	repo := new(mocks.ShortlinkRepositoryMock)
+	repo := new(mocks.PasteRepositoryMock)
 	repo.On("FindContentByShortlink", "abc").Return(&entities.Content{Text: "something"}, nil)
 	generator := services.NewShortlinkGenerator(repo, &MockToken{})
 	shortlink, err := generator.Generate()
