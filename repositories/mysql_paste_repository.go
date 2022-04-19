@@ -7,12 +7,12 @@ import (
 	"github.com/zaenulhilmi/pastebin/helpers"
 )
 
-type shortlinkRepository struct {
+type pasteRepository struct {
 	db    *sql.DB
 	clock helpers.Clock
 }
 
-func (s *shortlinkRepository) CreateContent(shortlink string, text string, expiryByMinutes int) error {
+func (s *pasteRepository) CreateContent(shortlink string, text string, expiryByMinutes int) error {
 	createdAt := s.clock.Now()
 	_, err := s.db.Exec("INSERT INTO contents (shortlink, text, created_at, expiry_in_minutes) VALUES (?, ?, ?, ?)", shortlink, text, createdAt, expiryByMinutes)
 	if err != nil {
@@ -21,7 +21,7 @@ func (s *shortlinkRepository) CreateContent(shortlink string, text string, expir
 	return nil
 }
 
-func (s *shortlinkRepository) FindContentByShortlink(shortlink string) (*entities.Content, error) {
+func (s *pasteRepository) FindContentByShortlink(shortlink string) (*entities.Content, error) {
 	var content entities.Content
 	err := s.db.QueryRow("SELECT text, created_at, expiry_in_minutes FROM contents WHERE shortlink = ?", shortlink).
 		Scan(&content.Text, &content.CreatedAt, &content.ExpiryInMinutes)
@@ -36,7 +36,7 @@ func (s *shortlinkRepository) FindContentByShortlink(shortlink string) (*entitie
 	return &content, nil
 }
 
-func (s *shortlinkRepository) DeleteExpiredContent() error {
+func (s *pasteRepository) DeleteExpiredContent() error {
 	_, err := s.db.Exec("DELETE FROM contents WHERE NOW() > DATE_ADD(created_at, INTERVAL expiry_in_minutes MINUTE) AND expiry_in_minutes != 0")
 	return err
 }

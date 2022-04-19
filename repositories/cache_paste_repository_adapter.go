@@ -5,19 +5,19 @@ import (
 	"github.com/zaenulhilmi/pastebin/helpers"
 )
 
-func NewCacheAdapter(shortlinkRepository ShortlinkRepository, cache helpers.Cache) ShortlinkRepository {
-	return &cacheShortlinkRepositoryAdapter{
+func NewCacheAdapter(shortlinkRepository PasteRepository, cache helpers.Cache) PasteRepository {
+	return &cachePasteRepositoryAdapter{
 		shortlinkRepository: shortlinkRepository,
 		cache:               cache,
 	}
 }
 
-type cacheShortlinkRepositoryAdapter struct {
-	shortlinkRepository ShortlinkRepository
+type cachePasteRepositoryAdapter struct {
+	shortlinkRepository PasteRepository
 	cache               helpers.Cache
 }
 
-func (c *cacheShortlinkRepositoryAdapter) FindContentByShortlink(shortlink string) (*entities.Content, error) {
+func (c *cachePasteRepositoryAdapter) FindContentByShortlink(shortlink string) (*entities.Content, error) {
 	content, found := c.cache.Get(shortlink)
 	if found {
 		return content.(*entities.Content), nil
@@ -25,7 +25,7 @@ func (c *cacheShortlinkRepositoryAdapter) FindContentByShortlink(shortlink strin
 	return c.shortlinkRepository.FindContentByShortlink(shortlink)
 }
 
-func (c *cacheShortlinkRepositoryAdapter) CreateContent(shortlink string, text string, expiryByMinutes int) error {
+func (c *cachePasteRepositoryAdapter) CreateContent(shortlink string, text string, expiryByMinutes int) error {
 	err := c.shortlinkRepository.CreateContent(shortlink, text, expiryByMinutes)
 	if err != nil {
 		return err
@@ -38,7 +38,7 @@ func (c *cacheShortlinkRepositoryAdapter) CreateContent(shortlink string, text s
 	return err
 }
 
-func (c *cacheShortlinkRepositoryAdapter) DeleteExpiredContent() error {
+func (c *cachePasteRepositoryAdapter) DeleteExpiredContent() error {
 	err := c.shortlinkRepository.DeleteExpiredContent()
 	if err != nil {
 		return err

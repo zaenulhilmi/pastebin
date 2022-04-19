@@ -11,7 +11,7 @@ type ShortlinkGenerator interface {
 	Generate() (string, error)
 }
 
-func NewShortlinkGenerator(repository repositories.ShortlinkRepository, token helpers.Token) ShortlinkGenerator {
+func NewShortlinkGenerator(repository repositories.PasteRepository, token helpers.Token) ShortlinkGenerator {
 	return &md5Generator{
 		token:      token,
 		repository: repository,
@@ -20,7 +20,7 @@ func NewShortlinkGenerator(repository repositories.ShortlinkRepository, token he
 
 type md5Generator struct {
 	token      helpers.Token
-	repository repositories.ShortlinkRepository
+	repository repositories.PasteRepository
 }
 
 func (s *md5Generator) Generate() (string, error) {
