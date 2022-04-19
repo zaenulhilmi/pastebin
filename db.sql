@@ -2,7 +2,7 @@ CREATE SCHEMA pastebin;
 
 USE pastebin;
 
-CREATE TABLE contents (
+CREATE TABLE pastes (
   shortlink VARCHAR(60) PRIMARY KEY,
   text TEXT NOT NULL,
   created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP,

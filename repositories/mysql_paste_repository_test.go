@@ -24,7 +24,7 @@ func TestFindContentByShortlink(t *testing.T) {
 
 	content := entities.Paste{}
 
-	query := "SELECT text, created_at, expiry_in_minutes FROM contents WHERE shortlink = ?"
+	query := "SELECT text, created_at, expiry_in_minutes FROM pastes WHERE shortlink = ?"
 
 	rows := sqlmock.NewRows([]string{"text", "created_at", "expiry_in_minutes"}).
 		AddRow(&content.Text, &content.CreatedAt, &content.ExpiryInMinutes)
@@ -48,7 +48,7 @@ func TestCreateContent(t *testing.T) {
 	}
 	defer db.Close()
 
-	query := "INSERT INTO contents (shortlink, text, created_at, expiry_in_minutes) VALUES (?, ?, ?, ?)"
+	query := "INSERT INTO pastes (shortlink, text, created_at, expiry_in_minutes) VALUES (?, ?, ?, ?)"
 	mock.ExpectExec(query).
 		WithArgs("shortlink", "text", clock.Now(), 10).
 		WillReturnResult(sqlmock.NewResult(1, 1))
@@ -67,7 +67,7 @@ func TestDeleteExpiredContent(t *testing.T) {
 		t.Fatalf("an error '%s' was not expected when opening a stub database connection", err)
 	}
 	defer db.Close()
-	query := "DELETE FROM contents WHERE NOW() > DATE_ADD(created_at, INTERVAL expiry_in_minutes MINUTE) AND expiry_in_minutes != 0"
+	query := "DELETE FROM pastes WHERE NOW() > DATE_ADD(created_at, INTERVAL expiry_in_minutes MINUTE) AND expiry_in_minutes != 0"
 	mock.ExpectExec(query).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
