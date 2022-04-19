@@ -9,3 +9,10 @@ CREATE TABLE pastes (
   expiry_in_minutes INTEGER NOT NULL DEFAULT 0
 );
 
+CREATE TABLE url_visit_histories (
+	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
+    url VARCHAR(255) NOT NULL,
+    address VARCHAR(50),
+	method VARCHAR(10),
+    created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
+);

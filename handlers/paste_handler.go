@@ -16,10 +16,20 @@ func NewShortlinkHandler(service services.PasteService) PasteHandler {
 type PasteHandler interface {
 	GetContent(w http.ResponseWriter, r *http.Request)
 	CreateContent(w http.ResponseWriter, r *http.Request)
+    Content(w http.ResponseWriter, r *http.Request)
 }
 
 type pasteHandler struct {
 	pasteService services.PasteService
+}
+
+func (h *pasteHandler) Content(w http.ResponseWriter, r *http.Request) {
+	switch r.Method {
+	case http.MethodGet:
+		h.GetContent(w, r)
+	case http.MethodPost:
+		h.CreateContent(w, r)
+	}
 }
 
 func (h *pasteHandler) GetContent(w http.ResponseWriter, r *http.Request) {
