@@ -5,13 +5,13 @@ import (
 	"github.com/zaenulhilmi/pastebin/repositories"
 )
 
-type ShortlinkService interface {
+type PasteService interface {
 	GetContent(shortlink string) (*entities.Content, error)
 	CreateContent(text string, expiryInMinutes int) (string, error)
 	DeleteExpiredContent() error
 }
 
-func NewShortlinkService(repository repositories.ShortlinkRepository, shortlinkGenerator ShortlinkGenerator) ShortlinkService {
+func NewShortlinkService(repository repositories.ShortlinkRepository, shortlinkGenerator ShortlinkGenerator) PasteService {
 	return &shortlinkService{
 		repository: repository,
 		generator:  shortlinkGenerator,

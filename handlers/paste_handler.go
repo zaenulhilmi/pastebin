@@ -7,9 +7,9 @@ import (
 	"github.com/zaenulhilmi/pastebin/services"
 )
 
-func NewShortlinkHandler(service services.ShortlinkService) PasteHandler {
+func NewShortlinkHandler(service services.PasteService) PasteHandler {
 	return &pasteHandler{
-		shortlinkService: service,
+		pasteService: service,
 	}
 }
 
@@ -19,12 +19,12 @@ type PasteHandler interface {
 }
 
 type pasteHandler struct {
-	shortlinkService services.ShortlinkService
+	pasteService services.PasteService
 }
 
 func (h *pasteHandler) GetContent(w http.ResponseWriter, r *http.Request) {
 	shortlink := r.URL.Query().Get("shortlink")
-	content, err := h.shortlinkService.GetContent(shortlink)
+	content, err := h.pasteService.GetContent(shortlink)
 	if err != nil {
 		internalServerError(w)
 		return
@@ -54,7 +54,7 @@ func (h *pasteHandler) CreateContent(w http.ResponseWriter, r *http.Request) {
 		internalServerError(w)
 		return
 	}
-	shortlink, err := h.shortlinkService.CreateContent(request.Text, request.ExpiryInMinutes)
+	shortlink, err := h.pasteService.CreateContent(request.Text, request.ExpiryInMinutes)
 	if err != nil {
 		internalServerError(w)
 		return
