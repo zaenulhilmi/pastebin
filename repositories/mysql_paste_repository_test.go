@@ -22,7 +22,7 @@ func TestFindContentByShortlink(t *testing.T) {
 	}
 	defer db.Close()
 
-	content := entities.Content{}
+	content := entities.Paste{}
 
 	query := "SELECT text, created_at, expiry_in_minutes FROM contents WHERE shortlink = ?"
 

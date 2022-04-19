@@ -21,8 +21,8 @@ func (s *pasteRepository) CreateContent(shortlink string, text string, expiryByM
 	return nil
 }
 
-func (s *pasteRepository) FindContentByShortlink(shortlink string) (*entities.Content, error) {
-	var content entities.Content
+func (s *pasteRepository) FindContentByShortlink(shortlink string) (*entities.Paste, error) {
+	var content entities.Paste
 	err := s.db.QueryRow("SELECT text, created_at, expiry_in_minutes FROM contents WHERE shortlink = ?", shortlink).
 		Scan(&content.Text, &content.CreatedAt, &content.ExpiryInMinutes)
 

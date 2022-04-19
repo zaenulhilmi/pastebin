@@ -9,9 +9,9 @@ type PasteServiceMock struct {
 	mock.Mock
 }
 
-func (m *PasteServiceMock) GetContent(shortlink string) (*entities.Content, error) {
+func (m *PasteServiceMock) GetContent(shortlink string) (*entities.Paste, error) {
 	args := m.Called(shortlink)
-	return args.Get(0).(*entities.Content), args.Error(1)
+	return args.Get(0).(*entities.Paste), args.Error(1)
 }
 
 func (m *PasteServiceMock) CreateContent(text string, expiryInMinutes int) (string, error) {

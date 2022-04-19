@@ -5,14 +5,14 @@ import (
 	"time"
 )
 
-type Content struct {
+type Paste struct {
 	Text            string    `json:"text"`
 	CreatedAt       time.Time `json:"created_at"`
 	ExpiryInMinutes int       `json:"expiry_in_minutes"`
 }
 
-func (c *Content) MarshalJSON() ([]byte, error) {
-	type Alias Content
+func (c *Paste) MarshalJSON() ([]byte, error) {
+	type Alias Paste
 	return json.Marshal(&struct {
 		*Alias
 		CreatedAt string `json:"created_at"`

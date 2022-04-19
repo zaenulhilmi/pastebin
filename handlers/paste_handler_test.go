@@ -20,7 +20,7 @@ func TestReadShortlinkOk(t *testing.T) {
 	shortlinkService := new(mocks.PasteServiceMock)
 
 	createdAt := time.Now()
-	shortlinkService.On("GetContent", "abc").Return(&entities.Content{
+	shortlinkService.On("GetContent", "abc").Return(&entities.Paste{
 		Text:            "test",
 		CreatedAt:       createdAt,
 		ExpiryInMinutes: 10,
@@ -39,7 +39,7 @@ func TestReadShortlinkNotFound(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	shortlinkService := new(mocks.PasteServiceMock)
 
-	var emptyContent *entities.Content
+	var emptyContent *entities.Paste
 	shortlinkService.On("GetContent", "abc").Return(emptyContent, nil)
 	shortlinkHandler := handlers.NewShortlinkHandler(shortlinkService)
 	handler := http.HandlerFunc(shortlinkHandler.GetContent)
@@ -54,7 +54,7 @@ func TestReadShortlinkGeneralError(t *testing.T) {
 	recorder := httptest.NewRecorder()
 	shortlinkService := new(mocks.PasteServiceMock)
 
-	var emptyContent *entities.Content
+	var emptyContent *entities.Paste
 	shortlinkService.On("GetContent", "abc").Return(emptyContent, errors.New("error"))
 	shortlinkHandler := handlers.NewShortlinkHandler(shortlinkService)
 	handler := http.HandlerFunc(shortlinkHandler.GetContent)

@@ -6,7 +6,7 @@ import (
 )
 
 type PasteService interface {
-	GetContent(shortlink string) (*entities.Content, error)
+	GetContent(shortlink string) (*entities.Paste, error)
 	CreateContent(text string, expiryInMinutes int) (string, error)
 	DeleteExpiredContent() error
 }
@@ -23,7 +23,7 @@ type pasteService struct {
 	generator  ShortlinkGenerator
 }
 
-func (s *pasteService) GetContent(shortlink string) (*entities.Content, error) {
+func (s *pasteService) GetContent(shortlink string) (*entities.Paste, error) {
 	content, err := s.repository.FindContentByShortlink(shortlink)
 	if err != nil {
 		return nil, err

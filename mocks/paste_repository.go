@@ -9,9 +9,9 @@ type PasteRepositoryMock struct {
 	mock.Mock
 }
 
-func (m *PasteRepositoryMock) FindContentByShortlink(shortlink string) (*entities.Content, error) {
+func (m *PasteRepositoryMock) FindContentByShortlink(shortlink string) (*entities.Paste, error) {
 	args := m.Called(shortlink)
-	return args.Get(0).(*entities.Content), args.Error(1)
+	return args.Get(0).(*entities.Paste), args.Error(1)
 }
 
 func (m *PasteRepositoryMock) CreateContent(shortlink string, text string, expiryByMinutes int) error {

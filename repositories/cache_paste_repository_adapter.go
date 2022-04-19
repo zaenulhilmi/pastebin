@@ -17,10 +17,10 @@ type cachePasteRepositoryAdapter struct {
 	cache               helpers.Cache
 }
 
-func (c *cachePasteRepositoryAdapter) FindContentByShortlink(shortlink string) (*entities.Content, error) {
+func (c *cachePasteRepositoryAdapter) FindContentByShortlink(shortlink string) (*entities.Paste, error) {
 	content, found := c.cache.Get(shortlink)
 	if found {
-		return content.(*entities.Content), nil
+		return content.(*entities.Paste), nil
 	}
 	return c.shortlinkRepository.FindContentByShortlink(shortlink)
 }

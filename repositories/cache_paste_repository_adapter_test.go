@@ -12,10 +12,10 @@ import (
 
 func TestFindContentByShortlinkAdapterByCache(t *testing.T) {
 	shortlinkRepository := new(mocks.PasteRepositoryMock)
-	shortlinkRepository.On("FindContentByShortlink", "shortlink").Return(&entities.Content{Text: "from repo"}, nil)
+	shortlinkRepository.On("FindContentByShortlink", "shortlink").Return(&entities.Paste{Text: "from repo"}, nil)
 
 	cache := new(mocks.CacheMock)
-	cache.On("Get", "shortlink").Return(&entities.Content{Text: "from cache"}, true)
+	cache.On("Get", "shortlink").Return(&entities.Paste{Text: "from cache"}, true)
 
 	adapter := repositories.NewCacheAdapter(shortlinkRepository, cache)
 	content, err := adapter.FindContentByShortlink("shortlink")
@@ -25,10 +25,10 @@ func TestFindContentByShortlinkAdapterByCache(t *testing.T) {
 
 func TestFindContentByShortlinkAdapterByRepositories(t *testing.T) {
 	shortlinkRepository := new(mocks.PasteRepositoryMock)
-	shortlinkRepository.On("FindContentByShortlink", "shortlink").Return(&entities.Content{Text: "from repo"}, nil)
+	shortlinkRepository.On("FindContentByShortlink", "shortlink").Return(&entities.Paste{Text: "from repo"}, nil)
 
 	cache := new(mocks.CacheMock)
-	var emptyContent *entities.Content
+	var emptyContent *entities.Paste
 	cache.On("Get", "shortlink").Return(emptyContent, false)
 
 	adapter := repositories.NewCacheAdapter(shortlinkRepository, cache)
@@ -42,7 +42,7 @@ func TestCreateContentSaveToCache(t *testing.T) {
 	shortlinkRepository := new(mocks.PasteRepositoryMock)
 	shortlinkRepository.On("CreateContent", "shortlink", "from repo", 10).Return(nil)
 
-	createdContent := &entities.Content{Text: "from repo", CreatedAt: clock.Now(), ExpiryInMinutes: 10}
+	createdContent := &entities.Paste{Text: "from repo", CreatedAt: clock.Now(), ExpiryInMinutes: 10}
 	shortlinkRepository.On("FindContentByShortlink", "shortlink").Return(createdContent, nil)
 
 	cache := new(mocks.CacheMock)
@@ -53,7 +53,7 @@ func TestCreateContentSaveToCache(t *testing.T) {
 	assert.Nil(t, err)
 	shortlinkRepository.AssertCalled(t, "CreateContent", "shortlink", "from repo", 10)
 
-	contentTextMatcher := mock.MatchedBy(func(content *entities.Content) bool {
+	contentTextMatcher := mock.MatchedBy(func(content *entities.Paste) bool {
 		return content.Text == "from repo"
 	})
 	cache.AssertCalled(t, "Set", "shortlink", contentTextMatcher)

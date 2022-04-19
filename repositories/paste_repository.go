@@ -8,7 +8,7 @@ import (
 )
 
 type PasteRepository interface {
-	FindContentByShortlink(shortlink string) (*entities.Content, error)
+	FindContentByShortlink(shortlink string) (*entities.Paste, error)
 	CreateContent(shortlink string, text string, expiryByMinutes int) error
 	DeleteExpiredContent() error
 }
