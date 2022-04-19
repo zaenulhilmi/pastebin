@@ -11,21 +11,21 @@ type ShortlinkGenerator interface {
 	Generate() (string, error)
 }
 
-func NewShortlinkGenerator(repository repositories.PasteRepository, token helpers.Token) ShortlinkGenerator {
+func NewShortlinkGenerator(readRepository repositories.ReadPasteRepository, token helpers.Token) ShortlinkGenerator {
 	return &md5Generator{
 		token:      token,
-		repository: repository,
+		readRepository: readRepository,
 	}
 }
 
 type md5Generator struct {
 	token      helpers.Token
-	repository repositories.PasteRepository
+	readRepository repositories.ReadPasteRepository
 }
 
 func (s *md5Generator) Generate() (string, error) {
 	token := s.token.Random(8)
-	content, err := s.repository.FindContentByShortlink(token)
+	content, err := s.readRepository.FindContentByShortlink(token)
 	if err != nil {
 		return "", err
 	}

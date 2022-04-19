@@ -7,14 +7,24 @@ import (
 	"github.com/zaenulhilmi/pastebin/helpers"
 )
 
-type PasteRepository interface {
+type ReadPasteRepository interface {
 	FindContentByShortlink(shortlink string) (*entities.Paste, error)
+}
+
+type WritePasteRepository interface {
 	CreateContent(shortlink string, text string, expiryByMinutes int) error
 	DeleteExpiredContent() error
 }
 
-func NewShortlinkRepository(db *sql.DB, clock helpers.Clock) PasteRepository {
-	return &pasteRepository{
+func NewReadPasteRepository(db *sql.DB, clock helpers.Clock) ReadPasteRepository {
+	return &readPasteRepository{
+		db:    db,
+		clock: clock,
+	}
+}
+
+func NewWritePasteRepository(db *sql.DB, clock helpers.Clock) WritePasteRepository {
+	return &writePasteRepository{
 		db:    db,
 		clock: clock,
 	}

@@ -11,20 +11,22 @@ type PasteService interface {
 	DeleteExpiredContent() error
 }
 
-func NewShortlinkService(repository repositories.PasteRepository, shortlinkGenerator ShortlinkGenerator) PasteService {
+func NewShortlinkService(readRepository repositories.ReadPasteRepository, writeRepository repositories.WritePasteRepository, shortlinkGenerator ShortlinkGenerator) PasteService {
 	return &pasteService{
-		repository: repository,
-		generator:  shortlinkGenerator,
+		readRepository:  readRepository,
+		writeRepository: writeRepository,
+		generator:       shortlinkGenerator,
 	}
 }
 
 type pasteService struct {
-	repository repositories.PasteRepository
+	readRepository repositories.ReadPasteRepository
+	writeRepository repositories.WritePasteRepository
 	generator  ShortlinkGenerator
 }
 
 func (s *pasteService) GetContent(shortlink string) (*entities.Paste, error) {
-	content, err := s.repository.FindContentByShortlink(shortlink)
+	content, err := s.readRepository.FindContentByShortlink(shortlink)
 	if err != nil {
 		return nil, err
 	}
@@ -36,7 +38,7 @@ func (s *pasteService) CreateContent(text string, expiryInMinutes int) (string, 
 	if err != nil {
 		return "", err
 	}
-	err = s.repository.CreateContent(shortlink, text, expiryInMinutes)
+	err = s.writeRepository.CreateContent(shortlink, text, expiryInMinutes)
 	if err != nil {
 		return "", err
 	}
@@ -44,6 +46,6 @@ func (s *pasteService) CreateContent(text string, expiryInMinutes int) (string, 
 }
 
 func (s *pasteService) DeleteExpiredContent() error {
-	err := s.repository.DeleteExpiredContent()
+	err := s.writeRepository.DeleteExpiredContent()
 	return err
 }

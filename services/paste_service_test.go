@@ -13,12 +13,13 @@ import (
 
 func TestGetContentNotFound(t *testing.T) {
 	var emptyContent *entities.Paste
-	repository := new(mocks.PasteRepositoryMock)
-	repository.On("FindContentByShortlink", "abc").Return(emptyContent, nil)
+	readRepository := new(mocks.ReadPasteRepositoryMock)
+	readRepository.On("FindContentByShortlink", "abc").Return(emptyContent, nil)
+	writeRepository := new(mocks.WritePasteRepositoryMock)
 
 	generator := new(mocks.ShortlinkGeneratorMock)
 
-	shortlinkService := services.NewShortlinkService(repository, generator)
+	shortlinkService := services.NewShortlinkService(readRepository, writeRepository, generator)
 	content, _ := shortlinkService.GetContent("abc")
 	assert.Equal(t, emptyContent, content)
 }
@@ -29,11 +30,12 @@ func TestGetContentOk(t *testing.T) {
 		CreatedAt: time.Now(),
 	}
 
-	repository := new(mocks.PasteRepositoryMock)
-	repository.On("FindContentByShortlink", "abc").Return(expectedContent, nil)
+	readRepository := new(mocks.ReadPasteRepositoryMock)
+	readRepository.On("FindContentByShortlink", "abc").Return(expectedContent, nil)
+	writeRepository := new(mocks.WritePasteRepositoryMock)
 
 	generator := new(mocks.ShortlinkGeneratorMock)
-	shortlinkService := services.NewShortlinkService(repository, generator)
+	shortlinkService := services.NewShortlinkService(readRepository, writeRepository, generator)
 	content, _ := shortlinkService.GetContent("abc")
 	assert.Equal(t, expectedContent, content)
 
@@ -41,11 +43,12 @@ func TestGetContentOk(t *testing.T) {
 
 func TestGetContentError(t *testing.T) {
 	var emptyContent *entities.Paste
-	repository := new(mocks.PasteRepositoryMock)
-	repository.On("FindContentByShortlink", "abc").Return(emptyContent, errors.New("error"))
+	readRepository := new(mocks.ReadPasteRepositoryMock)
+	readRepository.On("FindContentByShortlink", "abc").Return(emptyContent, errors.New("error"))
+	writeRepository := new(mocks.WritePasteRepositoryMock)
 
 	generator := new(mocks.ShortlinkGeneratorMock)
-	shortlinkService := services.NewShortlinkService(repository, generator)
+	shortlinkService := services.NewShortlinkService(readRepository, writeRepository, generator)
 	content, err := shortlinkService.GetContent("abc")
 	assert.Equal(t, emptyContent, content)
 	assert.Equal(t, "error", err.Error())
@@ -68,13 +71,14 @@ func TestCreateContentOk(t *testing.T) {
 
 	for _, test := range tests {
 		t.Run(test.name, func(t *testing.T) {
-			repository := new(mocks.PasteRepositoryMock)
-			repository.On("CreateContent", test.expectShortlink, "content", 10).Return(nil)
+			writeRepository := new(mocks.WritePasteRepositoryMock)
+			writeRepository.On("CreateContent", test.expectShortlink, "content", 10).Return(nil)
+			readRepository := new(mocks.ReadPasteRepositoryMock)
 
 			generator := new(mocks.ShortlinkGeneratorMock)
 			generator.On("Generate").Return(test.expectShortlink, nil)
 
-			shortlinkService := services.NewShortlinkService(repository, generator)
+			shortlinkService := services.NewShortlinkService(readRepository, writeRepository, generator)
 			shortlink, err := shortlinkService.CreateContent("content", 10)
 
 			assert.Nil(t, err)
@@ -85,35 +89,38 @@ func TestCreateContentOk(t *testing.T) {
 }
 
 func TestCreateContentError(t *testing.T) {
-	repository := new(mocks.PasteRepositoryMock)
+	writeRepository := new(mocks.WritePasteRepositoryMock)
 	expectShortlink := "xyz"
-	repository.On("generateShortlink").Return(expectShortlink)
-	repository.On("CreateContent", expectShortlink, "content", 10).Return(errors.New("error"))
+	writeRepository.On("generateShortlink").Return(expectShortlink)
+	writeRepository.On("CreateContent", expectShortlink, "content", 10).Return(errors.New("error"))
+	readRepository := new(mocks.ReadPasteRepositoryMock)
 
 	generator := new(mocks.ShortlinkGeneratorMock)
 	generator.On("Generate").Return(expectShortlink, nil)
-	shortlinkService := services.NewShortlinkService(repository, generator)
+	shortlinkService := services.NewShortlinkService(readRepository, writeRepository, generator)
 	shortlink, err := shortlinkService.CreateContent("content", 10)
 	assert.NotNil(t, err)
 	assert.Equal(t, "", shortlink)
 }
 
 func TestDeleteExpiredContent(t *testing.T) {
-	repository := new(mocks.PasteRepositoryMock)
-	repository.On("DeleteExpiredContent").Return(nil)
+	writeRepository := new(mocks.WritePasteRepositoryMock)
+	writeRepository.On("DeleteExpiredContent").Return(nil)
+	readRepository := new(mocks.ReadPasteRepositoryMock)
 
-	shortlinkService := services.NewShortlinkService(repository, nil)
+	shortlinkService := services.NewShortlinkService(readRepository, writeRepository, nil)
 	err := shortlinkService.DeleteExpiredContent()
 	assert.Nil(t, err)
-	repository.AssertCalled(t, "DeleteExpiredContent")
+	writeRepository.AssertCalled(t, "DeleteExpiredContent")
 }
 
 func TestDeleteExpiredContentError(t *testing.T) {
-	repository := new(mocks.PasteRepositoryMock)
-	repository.On("DeleteExpiredContent").Return(errors.New("error"))
+	writeRepository := new(mocks.WritePasteRepositoryMock)
+	writeRepository.On("DeleteExpiredContent").Return(errors.New("error"))
+	readRepository := new(mocks.ReadPasteRepositoryMock)
 
-	shortlinkService := services.NewShortlinkService(repository, nil)
+	shortlinkService := services.NewShortlinkService(readRepository, writeRepository, nil)
 	err := shortlinkService.DeleteExpiredContent()
 	assert.NotNil(t, err)
-	repository.AssertCalled(t, "DeleteExpiredContent")
+	writeRepository.AssertCalled(t, "DeleteExpiredContent")
 }
