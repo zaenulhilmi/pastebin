@@ -9,7 +9,7 @@ type LogRepositoryMock struct {
 	mock.Mock
 }
 
-func (m *LogRepositoryMock) Create(log entities.Log) error {
+func (m *LogRepositoryMock) Create(log entities.ShortlinkLog) error {
 	args := m.Called(log)
 	return args.Error(0)
 }

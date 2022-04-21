@@ -19,15 +19,14 @@ func TestLogCreate(t *testing.T) {
 	}
 	defer db.Close()
 
-	log := entities.Log{
-		Url:     "http://google.com",
-		Address: "abcd",
-		Method:  "POST",
+	log := entities.ShortlinkLog{
+		Shortlink: "http://google.com",
+		Address:   "abcd",
 	}
 
-	query := "INSERT INTO url_visit_histories (url, address, method, created_at) VALUES (?, ?, ?, ?)"
+	query := "INSERT INTO url_visit_histories (url, address, created_at) VALUES (?, ?, ?)"
 	mock.ExpectExec(query).
-		WithArgs(log.Url, log.Address, log.Method, log.CreatedAt).
+		WithArgs(log.Shortlink, log.Address, log.CreatedAt).
 		WillReturnResult(sqlmock.NewResult(1, 1))
 
 	err = repo.Create(log)

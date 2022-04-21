@@ -30,10 +30,11 @@ func main() {
 	pasteService := services.NewShortlinkService(readPasteRepository, writePasteRepository, shortlinkGenerator)
 	pasteHandler := handlers.NewShortlinkHandler(pasteService)
 
-	r.HandleFunc("/paste", pasteHandler.Content)
-	//r.HandleFunc("/paste", pasteHandler.GetContent)
-	//r.HandleFunc("/create-paste", pasteHandler.CreateContent)
-	//r.Use(handlers.LoggingMiddleware)
+	logRepository := repositories.NewLogRepository(db)
+	logService := services.NewLogService(logRepository)
+	pasteHandle := handlers.LoggingMiddleware(logService, http.HandlerFunc(pasteHandler.Content))
+
+	r.Handle("/paste", pasteHandle)
 
 	s := gocron.NewScheduler(time.UTC)
 	s.Every(1).Minutes().Do(func() {

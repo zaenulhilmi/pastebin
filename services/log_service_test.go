@@ -12,7 +12,7 @@ import (
 
 func TestSaveLog(t *testing.T) {
 	logRepository := new(mocks.LogRepositoryMock)
-	log := entities.Log{}
+	log := entities.ShortlinkLog{}
 	logRepository.On("Create", log).Return(nil)
 	logService := services.NewLogService(logRepository)
 	logService.SaveLog(log)
@@ -21,7 +21,7 @@ func TestSaveLog(t *testing.T) {
 
 func TestSaveLogError(t *testing.T) {
 	logRepository := new(mocks.LogRepositoryMock)
-	log := entities.Log{}
+	log := entities.ShortlinkLog{}
 	logRepository.On("Create", log).Return(errors.New("error"))
 	logService := services.NewLogService(logRepository)
 	err := logService.SaveLog(log)

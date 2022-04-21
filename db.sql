@@ -11,8 +11,7 @@ CREATE TABLE pastes (
 
 CREATE TABLE url_visit_histories (
 	id INT NOT NULL AUTO_INCREMENT PRIMARY KEY,
-    url VARCHAR(255) NOT NULL,
+    shortlink VARCHAR(255) NOT NULL,
     address VARCHAR(50),
-	method VARCHAR(10),
     created_at TIMESTAMP NOT NULL DEFAULT CURRENT_TIMESTAMP
 );

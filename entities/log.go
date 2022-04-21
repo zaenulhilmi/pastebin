@@ -5,15 +5,15 @@ import (
 	"time"
 )
 
-type Log struct {
-	Url       string    `json:"url"`
+type ShortlinkLog struct {
+	Shortlink string    `json:"url"`
 	Method    string    `json:"method"`
 	Address   string    `json:"address"`
 	CreatedAt time.Time `json:"created_at"`
 }
 
-func (c *Log) MarshalJSON() ([]byte, error) {
-	type Alias Log
+func (c *ShortlinkLog) MarshalJSON() ([]byte, error) {
+	type Alias ShortlinkLog
 	return json.Marshal(&struct {
 		*Alias
 		CreatedAt string `json:"created_at"`

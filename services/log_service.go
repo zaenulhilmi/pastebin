@@ -6,7 +6,7 @@ import (
 )
 
 type LogService interface {
-	SaveLog(entities.Log) error
+	SaveLog(entities.ShortlinkLog) error
 }
 
 func NewLogService(repository repositories.LogRepository) LogService {
@@ -19,7 +19,7 @@ type logService struct {
 	repository repositories.LogRepository
 }
 
-func (s *logService) SaveLog(log entities.Log) error {
+func (s *logService) SaveLog(log entities.ShortlinkLog) error {
 	err := s.repository.Create(log)
 	return err
 }
