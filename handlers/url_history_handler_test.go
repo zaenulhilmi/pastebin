@@ -13,10 +13,8 @@ func TestRequestCreateMiddleware(t *testing.T) {
 	testHandler := new(mocks.HandlerMock)
 	logService := new(mocks.LogServiceMock)
 
-	// param anything
 	logService.On("SaveLog", mock.Anything).Return(nil)
 	req := httptest.NewRequest("GET", "/posts", nil)
-	// add params
 	req.URL.RawQuery = "shortlink=test"
 	rr := httptest.NewRecorder()
 
@@ -32,10 +30,8 @@ func TestRequestCreateMiddlewareNoShortlink(t *testing.T) {
 	testHandler := new(mocks.HandlerMock)
 	logService := new(mocks.LogServiceMock)
 
-	// param anything
 	logService.On("SaveLog", mock.Anything).Return(nil)
 	req := httptest.NewRequest("GET", "/posts", nil)
-	// add params
 	req.URL.RawQuery = "x=test"
 	rr := httptest.NewRecorder()
 
