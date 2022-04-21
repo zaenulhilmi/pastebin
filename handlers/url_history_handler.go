@@ -11,14 +11,18 @@ import (
 func LoggingMiddleware(logService services.LogService, handler http.Handler) http.Handler {
 
 	return http.HandlerFunc(func(w http.ResponseWriter, r *http.Request) {
-		log := entities.ShortlinkLog{
-			Method:    r.Method,
-			Shortlink: r.URL.RawQuery,
-			Address:   r.RemoteAddr,
-			CreatedAt: time.Now(),
-		}
+		shortlink := r.URL.Query().Get("shortlink")
 
-		logService.SaveLog(log)
+		if shortlink != "" {
+			log := entities.ShortlinkLog{
+				Method:    r.Method,
+				Shortlink: r.URL.RawQuery,
+				Address:   r.RemoteAddr,
+				CreatedAt: time.Now(),
+			}
+
+			logService.SaveLog(log)
+		}
 		handler.ServeHTTP(w, r)
 	})
 }
